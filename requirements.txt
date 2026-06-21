@@ -1,0 +1,6 @@
+# whois-deep has NO pip dependencies — pure Python stdlib only.
+# External binaries required (install via package manager):
+#   whois      — sudo apt-get install whois      (Ubuntu/Debian)
+#               brew install whois               (macOS)
+#   dig        — sudo apt-get install dnsutils   (Ubuntu/Debian)
+#               brew install bind                (macOS)

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>whois-deep — Registrar + RIR WHOIS enrichment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">WHOIS-DEEP</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-active">Home</a>
+    <a href="rir-board.html">RIR Board</a>
+    <a href="https://github.com/fmfalgun/whois-deep" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+    <a href="https://fmfalgun.github.io" target="_blank" rel="noopener noreferrer">Portfolio ↗</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1>WHOIS <span>DEEP</span></h1>
+  <p>Registrar WHOIS + IP WHOIS via RIR · ASN · netblock · hosting fingerprint</p>
+  <div class="install-block">
+    <span class="install-cmd">python3 whois-deep.py -d target.com</span>
+  </div>
+  <div class="hero-cta-row">
+    <a class="cta-btn" href="rir-board.html">→ RIR Board</a>
+    <a class="cta-ghost" href="https://github.com/fmfalgun/whois-deep" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+  </div>
+</section>
+
+<div class="layout">
+
+  <aside class="info-panel">
+
+    <div class="panel-block">
+      <div class="panel-heading">&gt; WHAT IS WHOIS DEEP</div>
+      <p class="panel-text">
+        Standard WHOIS (registry-level) queries the TLD registry — ICANN, Verisign, NomiNet — and often returns redacted contacts behind privacy shields. That single hop leaves two entire data layers untouched.
+      </p>
+      <p class="panel-text">
+        whois-deep goes two levels deeper:
+      </p>
+      <ul class="panel-list">
+        <li><strong>Registrar WHOIS</strong> — queries the registrar's own WHOIS server directly (not the registry's). Registrar servers frequently expose billing contacts, reseller chain, and nameserver provisioning info that the registry-level response omits.</li>
+        <li><strong>IP WHOIS via RIR</strong> — resolves the domain's A record, then queries the responsible Regional Internet Registry (ARIN, RIPE, APNIC, LACNIC, or AFRINIC) directly. Returns ASN, organisation name, netblock, CIDR notation, block size, and hosting provider classification.</li>
+      </ul>
+      <p class="panel-text">
+        Together these two extra hops answer: who registered it, who bills them, what network carries it, and who physically operates that infrastructure.
+      </p>
+    </div>
+
+    <div class="panel-block">
+      <div class="panel-heading">&gt; WHY THIS SCRIPT</div>
+      <p class="panel-text">
+        Raw <span class="inline-code">whois</span> output is unstructured, inconsistent text. Different registrars return different field names, different line endings, and sometimes plain garbage. whois-deep parses both registrar WHOIS and IP WHOIS responses into a consistent schema.
+      </p>
+      <p class="panel-text">
+        Beyond parsing it also:
+      </p>
+      <ul class="panel-list">
+        <li>Classifies the hosting environment — CDN edge node, shared hosting pool, dedicated VPS, cloud hyperscaler, or known CDN provider — based on org name and netblock patterns.</li>
+        <li>Calculates actual block size from the inetnum/CIDR so you know if you are looking at a /8 cloud superblock or a /27 dedicated allocation.</li>
+        <li>Caches results in a local SQLite database with a configurable TTL (default 24 h) to avoid hammering RIR rate limits on repeat queries.</li>
+        <li>Emits structured JSON, making output pipeline-friendly for jq, grep, and downstream scripts.</li>
+      </ul>
+      <p class="panel-text">
+        Pairs with <span class="inline-code">whois-extracter.py</span> (registry-level parsing) for complete three-layer WHOIS coverage.
+      </p>
+    </div>
+
+    <div class="panel-block">
+      <div class="panel-heading">&gt; HOW IT WORKS</div>
+      <div class="arch-diagram">
+        <div class="arch-box">INPUT: --domain target.com</div>
+        <div class="arch-box">↓</div>
+        <div class="arch-box">cache.db (24h TTL)</div>
+        <div class="arch-box">↓ (stale or --no-cache)</div>
+        <div class="arch-box">dig +short A → resolve IP</div>
+        <div class="arch-box">↓</div>
+        <div class="arch-box">whois &lt;ip&gt; → RIR query</div>
+        <div class="arch-box">whois -h &lt;registrar-whois-server&gt; &lt;domain&gt;</div>
+        <div class="arch-box">↓</div>
+        <div class="arch-box">parse: ASN · netblock · org · contacts</div>
+        <div class="arch-box">↓</div>
+        <div class="arch-box">JSON output + stdout summary</div>
+      </div>
+    </div>
+
+  </aside>
+
+  <main class="home-main">
+
+    <div class="panel-block">
+      <div class="panel-heading">&gt; USAGE</div>
+
+      <p class="panel-text">Basic domain query:</p>
+      <pre class="code-block"><span class="code-comment"># query registrar WHOIS + IP WHOIS, cache result</span>
+python3 whois-deep.py -d target.com</pre>
+
+      <p class="panel-text">Write structured JSON to file:</p>
+      <pre class="code-block">python3 whois-deep.py -d target.com --output results/target.json</pre>
+
+      <p class="panel-text">Bypass cache (force fresh query):</p>
+      <pre class="code-block"><span class="code-comment"># --no-cache: ignore cached result, re-query RIR and registrar WHOIS</span>
+python3 whois-deep.py -d target.com --no-cache</pre>
+
+      <p class="panel-text">Custom cache TTL:</p>
+      <pre class="code-block"><span class="code-comment"># --ttl: seconds before a cached entry is considered stale (default 86400)</span>
+python3 whois-deep.py -d target.com --ttl 3600</pre>
+
+      <p class="panel-text">Submit to RIR Board (public index):</p>
+      <pre class="code-block"><span class="code-comment"># --submit: opens a GitHub Issue with your result JSON</span>
+<span class="code-comment"># CI validates the JSON and merges it into the index</span>
+python3 whois-deep.py -d target.com --submit</pre>
+
+      <p class="panel-text">First-run configuration (RIR Board token):</p>
+      <pre class="code-block"><span class="code-comment"># --reconfigure: re-run the interactive setup wizard</span>
+python3 whois-deep.py --reconfigure</pre>
+    </div>
+
+    <div class="panel-block">
+      <div class="panel-heading">&gt; OUTPUT SCHEMA</div>
+      <p class="panel-text">All output is valid JSON. Top-level fields:</p>
+      <pre class="code-block">{
+  <span class="code-pre">"domain"</span>:        <span class="code-comment">"target.com"</span>,
+  <span class="code-pre">"queried_at"</span>:    <span class="code-comment">"2026-06-21T10:42:00Z"</span>,
+  <span class="code-pre">"cached"</span>:        <span class="code-comment">false</span>,
+  <span class="code-pre">"resolved_ip"</span>:   <span class="code-comment">"93.184.216.34"</span>,
+
+  <span class="code-pre">"ip_whois"</span>: {
+    <span class="code-pre">"rir"</span>:           <span class="code-comment">"ARIN"</span>,
+    <span class="code-pre">"asn"</span>:           <span class="code-comment">"AS15133"</span>,
+    <span class="code-pre">"net_name"</span>:      <span class="code-comment">"EDGECAST-NETBLK-03"</span>,
+    <span class="code-pre">"org_name"</span>:      <span class="code-comment">"MCI Communications Services, Inc."</span>,
+    <span class="code-pre">"country"</span>:       <span class="code-comment">"US"</span>,
+    <span class="code-pre">"inetnum"</span>:       <span class="code-comment">"93.184.216.0 - 93.184.216.255"</span>,
+    <span class="code-pre">"cidr"</span>: {
+      <span class="code-pre">"cidr_notation"</span>: <span class="code-comment">"93.184.216.0/24"</span>
+    },
+    <span class="code-pre">"block_context"</span>: <span class="code-comment">"dedicated /24 allocation"</span>,
+    <span class="code-pre">"hosting_hint"</span>:  <span class="code-comment">"Edgecast CDN"</span>,
+    <span class="code-pre">"abuse_email"</span>:   <span class="code-comment">"abuse@verizondigitalmedia.com"</span>
+  },
+
+  <span class="code-pre">"registrar_whois"</span>: {
+    <span class="code-pre">"server"</span>:        <span class="code-comment">"whois.iana.org"</span>,
+    <span class="code-pre">"contacts"</span>: {
+      <span class="code-pre">"registrant"</span>:  <span class="code-comment">"Internet Assigned Numbers Authority"</span>,
+      <span class="code-pre">"billing"</span>:     <span class="code-comment">null</span>
+    }
+  }
+}</pre>
+    </div>
+
+    <div class="panel-block">
+      <div class="panel-heading">&gt; HOSTING SIGNATURES</div>
+      <p class="panel-text">
+        whois-deep matches 14 hosting fingerprints against the RIR org name and netblock. Each classification carries a different pentest implication:
+      </p>
+      <ul class="panel-list">
+        <li><strong>Cloudflare</strong> — origin IP hidden behind proxy; real server is elsewhere. Do not scan this IP for open ports — you are looking at Cloudflare's edge, not the target.</li>
+        <li><strong>AWS</strong> — EC2 or AWS-managed service. Note the region from the CIDR; check for exposed S3, ALB, or ECS metadata endpoints.</li>
+        <li><strong>GCP</strong> — Google Cloud compute. Similar to AWS; look for GCP metadata server at 169.254.169.254.</li>
+        <li><strong>Azure</strong> — Microsoft cloud. IMDS endpoint accessible on unprotected instances.</li>
+        <li><strong>DigitalOcean</strong> — common for small VPS deployments; check default SSH keypair provisioning and droplet metadata.</li>
+        <li><strong>Vultr</strong> — budget VPS; no WAF by default; often misconfigured SMB or Redis exposed.</li>
+        <li><strong>Linode / Akamai</strong> — Linode was acquired by Akamai; netblocks may appear under either org. Treat as VPS — direct access, no edge proxy.</li>
+        <li><strong>Fastly</strong> — CDN similar to Cloudflare; origin IP hidden. Check for Host header bypass to reach origin directly.</li>
+        <li><strong>Akamai CDN</strong> — enterprise CDN; origin IP strictly hidden; Akamai-specific headers (X-Check-Cacheable, X-Akamai-*) in responses.</li>
+        <li><strong>Hostinger</strong> — shared hosting; likely cPanel; check for phpinfo, backup exposure, and weak FTP credentials.</li>
+        <li><strong>HostGator</strong> — shared cPanel hosting; high co-tenancy; directory listing and phpinfo common.</li>
+        <li><strong>PDR (PublicDomainRegistry)</strong> — registrar-side hosting; low-cost shared environment; limited WAF.</li>
+        <li><strong>Hetzner</strong> — German VPS/dedicated; direct exposure; common for self-hosted stacks; check default Nginx/Apache configs.</li>
+        <li><strong>Unknown</strong> — no pattern matched; inspect org_name and net_name manually; consider dedicated or colocation environment.</li>
+      </ul>
+    </div>
+
+    <div class="hof-cta-card">
+      <div class="hof-cta-label">[ // RIR BOARD ]</div>
+      <p class="hof-cta-desc">
+        Every domain queried with <span class="inline-code">--submit</span> is indexed here. Browse community RIR data — ASN, org, netblock, country — no tool required.
+      </p>
+      <a class="cta-btn" href="rir-board.html">→ Open RIR Board</a>
+    </div>
+
+  </main>
+
+</div>
+
+<footer class="site-footer">
+  Built by Falgun Marothia &middot; data from ARIN / RIPE / APNIC / LACNIC / AFRINIC &middot;
+  <a href="https://github.com/fmfalgun/whois-deep" target="_blank" rel="noopener noreferrer">GitHub ↗</a> &middot;
+  <a href="rir-board.html">RIR Board</a>
+</footer>
+
+</body>
+</html>

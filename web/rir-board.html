@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIR Board — whois-deep</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">WHOIS-DEEP</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="rir-board.html" class="nav-active">RIR Board</a>
+    <a href="https://github.com/fmfalgun/whois-deep" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+    <a href="https://fmfalgun.github.io" target="_blank" rel="noopener noreferrer">Portfolio ↗</a>
+  </div>
+</nav>
+
+<div class="hof-subheader">
+  <span id="rb-stats">loading...</span>
+</div>
+
+<main>
+
+  <div id="rb-disclaimer">
+    Data sourced from public WHOIS servers (ARIN, RIPE, APNIC, LACNIC, AFRINIC). Results reflect passive queries only — no active scanning. ASN / netblock data may lag RIR updates by hours.
+  </div>
+
+  <div id="rb-howto">
+    <code class="inline-code">python3 whois-deep.py -d yourdomain.com --submit</code>
+    <span>→ results appear here after CI processes the submission</span>
+  </div>
+
+  <div id="search-row">
+    <input type="text" id="search-input" placeholder="filter domains..." autocomplete="off" spellcheck="false">
+  </div>
+
+  <div id="domain-list">
+    <p class="empty">Loading...</p>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <a href="index.html">← Home</a> &middot; RIR Board &middot;
+  <a href="https://github.com/fmfalgun/whois-deep" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+</footer>
+
+<script src="assets/js/rir-board.js"></script>
+</body>
+</html>

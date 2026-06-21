@@ -1,0 +1,18 @@
+{
+  "total_domains": 1,
+  "domains": [
+    {
+      "domain": "nmap.org",
+      "display_name": "fmfalgun",
+      "display_loc": "Chennai, India",
+      "queried_at": "2026-06-21T05:00:00Z",
+      "last_refreshed": "2026-06-21T05:00:00Z",
+      "rir": "ARIN",
+      "asn": "63949",
+      "org": "Akamai Technologies, Inc.",
+      "country": "US",
+      "netblock": "45.33.0.0/17",
+      "ip_range": "45.33.0.0 - 45.33.127.255"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "domain": "nmap.org",
+  "queried_at": "2026-06-21T05:00:00Z",
+  "cached": false,
+  "resolved_ip": "45.33.32.156",
+  "all_resolved": ["45.33.32.156"],
+  "ip_whois": {
+    "available": true,
+    "ip": "45.33.32.156",
+    "rir": "ARIN",
+    "inetnum": "45.33.0.0 - 45.33.127.255",
+    "cidr": {
+      "raw": "45.33.0.0 - 45.33.127.255",
+      "start": "45.33.0.0",
+      "end": "45.33.127.255",
+      "size": 32768,
+      "cidr_notation": "45.33.0.0/17"
+    },
+    "block_context": "massive block — major ISP or cloud provider",
+    "net_name": "LINODE-US",
+    "org_name": "Akamai Technologies, Inc.",
+    "country": "US",
+    "asn": "63949",
+    "abuse_email": "abuse@akamai.com",
+    "hosting_hint": "Linode/Akamai VPS"
+  },
+  "registrar_whois": {
+    "available": true,
+    "domain": "nmap.org",
+    "server": "whois.networksolutions.com",
+    "contacts": {
+      "registrant": {
+        "name": null,
+        "org": "Insecure.Com LLC",
+        "email": null,
+        "phone": null
+      },
+      "admin": {"email": null},
+      "tech": {"email": null},
+      "billing": {
+        "name": null,
+        "email": null,
+        "phone": null
+      }
+    },
+    "reseller": null,
+    "updated": null
+  },
+  "display_name": "fmfalgun",
+  "display_loc": "Chennai, India",
+  "last_refreshed": "2026-06-21T05:00:00Z"
+}
