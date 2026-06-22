@@ -5,14 +5,14 @@
       "domain": "nmap.org",
       "display_name": "fmfalgun",
       "display_loc": "Chennai, India",
-      "queried_at": "2026-06-21T05:00:00Z",
-      "last_refreshed": "2026-06-21T05:00:00Z",
+      "queried_at": "2026-06-22T07:09:57.405210+00:00",
+      "last_refreshed": "2026-06-22T07:09:58Z",
       "rir": "ARIN",
-      "asn": "63949",
+      "asn": null,
       "org": "Akamai Technologies, Inc.",
       "country": "US",
-      "netblock": "45.33.0.0/17",
-      "ip_range": "45.33.0.0 - 45.33.127.255"
+      "netblock": "50.116.0.0/18",
+      "ip_range": "50.116.0.0 - 50.116.63.255"
     }
   ]
 }
