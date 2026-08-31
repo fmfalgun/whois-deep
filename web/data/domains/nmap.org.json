@@ -1,6 +1,6 @@
 {
   "domain": "nmap.org",
-  "queried_at": "2026-08-30T07:36:40.987167+00:00",
+  "queried_at": "2026-08-31T07:48:46.978704+00:00",
   "cached": false,
   "resolved_ip": "50.116.1.184",
   "all_resolved": [
@@ -27,32 +27,10 @@
     "hosting_hint": "Linode/Akamai VPS"
   },
   "registrar_whois": {
-    "available": true,
-    "domain": "nmap.org",
-    "contacts": {
-      "registrant": {
-        "name": null,
-        "org": "Super Privacy Service LTD c/o Dynadot",
-        "email": "https://www.dynadot.com/domain/contact-request?domain=nmap.org",
-        "phone": "+1.6505854708"
-      },
-      "admin": {
-        "email": "https://www.dynadot.com/domain/contact-request?domain=nmap.org"
-      },
-      "tech": {
-        "email": "https://www.dynadot.com/domain/contact-request?domain=nmap.org"
-      },
-      "billing": {
-        "name": null,
-        "email": null,
-        "phone": null
-      }
-    },
-    "reseller": null,
-    "updated": "2026-04-10T17:35:09.0Z",
-    "server": "whois.dynadot.com"
+    "available": false,
+    "reason": "Empty response from whois.dynadot.com"
   },
   "display_name": "fmfalgun",
   "display_loc": "Chennai, India",
-  "last_refreshed": "2026-08-30T07:36:42Z"
+  "last_refreshed": "2026-08-31T07:49:18Z"
 }
